@@ -1,0 +1,11 @@
+av
+mediapipe
+opencv_python_headless
+streamlit
+streamlit_webrtc
+tensorflow
+watchdog
+twilio
+streamlit-player
+face_recognition
+ipywidgets
