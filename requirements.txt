@@ -9,3 +9,12 @@ twilio
 streamlit-player
 face_recognition
 ipywidgets
+deepface
+face-recognition
+face-recognition-models
+spotipy
+pydub
+streamlit_player
+opencv-contrib-python
+opencv-python
+

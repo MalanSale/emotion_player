@@ -9,9 +9,6 @@ from spotipy.oauth2 import SpotifyOAuth
 import cv2
 from deepface import DeepFace
 import time
-import webbrowser
-import pandas as pd
-import numpy as np
 from deepface import DeepFace
 from face_recognition.api import face_locations
 from streamlit_player import st_player
@@ -75,7 +72,7 @@ def select_random_genre(mood, language):
         return None
 
 def search_song_by_language_and_genre(language, genre):
-    query = f" genre:{genre}"
+    query = f" genre:{genre} {language}"
     results = sp.search(query, limit=50, type="track")
     if results["tracks"]["items"]:
         track_uris = [item["uri"] for item in results["tracks"]["items"]]
@@ -109,52 +106,43 @@ def play_song(track_uri):
 def main():
 
     st.title("Emotion Based Music Recommender")
-    image_placeholder = st.empty()
-    image_path = "mario-la-pergola-uxV3wDMyccM-unsplash.jpg"
     emotion_detection_button = st.button("Emotion Detection")
-    if not emotion_detection_button:
-        image_placeholder.image(image_path, use_column_width=True, output_format="JPEG", width=100)
-
-    # st.image(image_path,use_column_width=True, output_format="JPEG", width=100)
     moods = ["happy", "sad", "energetic", "relax", "neutral", "surprise", "fear", "angry", "disgust"]
     languages = ["Hindi", "English", "Marathi"]
+    lang = 'English'
+    with st.sidebar:
+        default_lang_index = languages.index(lang)
+        user_language = st.selectbox("Select your preferred language:", languages, index=default_lang_index)
 
     if emotion_detection_button:
-        most_predicted_emotion = mood_detect()
-        # st.write("Emotion Detected:", most_predicted_emotion)
-        lang = 'English'
-        with st.sidebar:
-            most_predicted_emotion_index = moods.index(most_predicted_emotion)
-            # user_mood = st.selectbox("Select your mood:", moods, index=most_predicted_emotion_index)
-            default_lang_index = languages.index(lang)
-            user_language = st.selectbox("Select your preferred language:", languages, index=default_lang_index)
-        selected_genre = select_random_genre(most_predicted_emotion, lang.lower())
 
-    else:
-        # Additional feature: Stop the camera stream when switching to "Choose Mood"
-        with st.sidebar:
-            user_mood = st.selectbox("Select your mood:", moods, index=0)
-            user_language = st.selectbox("Select your preferred language:", languages, index=0)
-        selected_genre = select_random_genre(user_mood, user_language.lower())
 
-    if not selected_genre:
-        st.error("Invalid mood and language combination.")
-        return
-    track_uris = search_song_by_language_and_genre(user_language.lower(), selected_genre)
-    if not track_uris:
-        st.error(f"No songs found for the {selected_genre} genre in {user_language} language.")
-        return
+        while True:
 
-    st.success(f"Playing a random {selected_genre} song in {user_language} language to match your mood.")
-    random_track_uri = select_random_song(track_uris)
-    if random_track_uri:
-        recently_played_songs.append(random_track_uri)
-        if len(recently_played_songs) > len(random_track_uri):
-            recently_played_songs.pop(0)
-        audio_data = play_song(random_track_uri)
-        st.audio(audio_data, format="audio/wav", start_time=0)
-    else:
-        st.warning("No new songs available. Try again later.")
+            most_predicted_emotion = mood_detect()
+
+            selected_genre = select_random_genre(most_predicted_emotion, user_language.lower())
+
+            if not selected_genre:
+                st.error("Invalid mood and language combination.")
+                return
+            track_uris = search_song_by_language_and_genre(user_language.lower(), selected_genre)
+            if not track_uris:
+                st.error(f"No songs found for the {selected_genre} genre in {user_language} language.")
+                continue
+
+            random_track_uri = select_random_song(track_uris)
+
+            if random_track_uri:
+                recently_played_songs.append(random_track_uri)
+                if len(recently_played_songs) > len(random_track_uri):
+                    recently_played_songs.pop(0)
+                audio_data = play_song(random_track_uri)
+                st.audio(audio_data, format="audio/wav", start_time=0)
+                time.sleep(15)
+            else:
+                continue
+
 
 def mood_detect():
 
@@ -186,6 +174,7 @@ def mood_detect():
             cv2.putText(frame, text, (left, top - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
             cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
         video_placeholder.image(frame, channels="BGR", use_column_width=True)
+
     cap.release()
     cv2.destroyAllWindows()
     st.write("Detected Mood:", predicted_emotion)
