@@ -15,9 +15,9 @@ from pydub import AudioSegment
 from spotipy.oauth2 import SpotifyOAuth
 from streamlit_webrtc import webrtc_streamer
 
-os.environ["SPOTIPY_CLIENT_ID"] = "2ae751452b6a4bb385f129aa2849e30a"
-os.environ["SPOTIPY_CLIENT_SECRET"] = "fcae1bab1b7d4cf7b3b537ca19ffcd6d"
-os.environ["SPOTIPY_REDIRECT_URI"] = "http://localhost:8080"
+os.environ["SPOTIPY_CLIENT_ID"] = st.secrets["SPOTIPY_CLIENT_ID"]
+os.environ["SPOTIPY_CLIENT_SECRET"] = st.secrets["SPOTIPY_CLIENT_SECRET"]
+os.environ["SPOTIPY_REDIRECT_URI"] = st.secrets["SPOTIPY_REDIRECT_URI"]
 scope = "user-library-read user-read-playback-state user-modify-playback-state"
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
 
