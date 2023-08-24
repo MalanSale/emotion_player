@@ -30,6 +30,10 @@ drawing = mp.solutions.drawing_utils
 
 
 class EmotionMusicPlayer:
+    def __init__(self):
+        self.track_uris = []
+        self.current_track_index = 0
+
     genres = {
         "relax": ["acoustic", "ambient", "chill", "downtempo", "new-age", "piano", "sleep", "trip-hop"],
         "energetic": ["afrobeat", "anime", "breakbeat", "british", "dance", "detroit-techno", "j-dance", "j-idol",
@@ -109,20 +113,35 @@ class EmotionMusicPlayer:
             msg_placeholder.text("")
         else:
             # random_track_uri = self.select_random_song(track_uris)
-            random_track = random.choice(track_uris["tracks"]["items"])
+            self.track_uris = track_uris["tracks"]["items"]
+            self.current_track_index = 0
+            self.play_song(self.track_uris[self.current_track_index]["uri"], self.track_uris)
 
-            if random_track:
-                uri = random_track['uri']
-                # audio_data = self.play_song(random_track_uri, track_uris)
-                # self.autoplay_audio(audio_data)
-                player_url = f"https://open.spotify.com/embed/track/{uri.split(':')[2]}"
+            st.button("Previous Song", on_click=self.play_previous_song)
+            next_button = st.checkbox("Next Song")
+            if next_button:
+                self.play_next_song()
 
-                # Use the Streamlit `IFrame` to embed the player
-                st.markdown(
-                    f'<iframe src="{player_url}" width="300" height="80" frameborder="0" allowtransparency="true" '
-                    'allow="clipboard-write; encrypted-media; fullscreen"></iframe>',
-                    unsafe_allow_html=True,
-                )
+            player_url = f"https://open.spotify.com/embed/track/{self.track_uris[self.current_track_index]['uri'].split(':')[2]}"
+            st.markdown(
+                f'<iframe src="{player_url}" width="300" height="80" frameborder="0" allowtransparency="true" '
+                'allow="clipboard-write; encrypted-media; fullscreen"></iframe>',
+                unsafe_allow_html=True,
+            )
+            
+    def play_previous_song(self):
+        self.current_track_index = (self.current_track_index - 1) % len(self.track_uris)
+        self.play_song(self.track_uris[self.current_track_index]["uri"],self.track_uris)
+
+    def play_next_song(self):
+        self.play_song(self.track_uris[self.current_track_index]["uri"],self.track_uris)
+        player_url = f"https://open.spotify.com/embed/track/{self.track_uris[self.current_track_index]['uri'].split(':')[2]}"
+        st.markdown(
+                f'<iframe src="{player_url}" width="300" height="80" frameborder="0" allowtransparency="true" '
+                'allow="clipboard-write; encrypted-media; fullscreen"></iframe>',
+                unsafe_allow_html=True,
+            )
+
 
 
 class EmotionDetector:
@@ -192,7 +211,7 @@ def main():
 
         ctx = webrtc_streamer(key="emotion", video_processor_factory=EmotionDetector)
 
-        music_btn = st.button("Recommend Track")
+        music_btn = st.checkbox("Recommend Track")
         music_player = EmotionMusicPlayer()
 
         if music_btn and getattr(ctx, "video_processor", None):
