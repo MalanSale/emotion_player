@@ -1,27 +1,22 @@
 import base64
-import io
 import os
 import random
 import time
 import av
 import cv2
 import mediapipe as mp
-import requests
 import spotipy
 import streamlit as st
 from deepface import DeepFace
 from face_recognition.api import face_locations
-from pydub import AudioSegment
 from spotipy.oauth2 import SpotifyOAuth
 from streamlit_webrtc import webrtc_streamer
-from IPython.display import Audio, display
 
 os.environ["SPOTIPY_CLIENT_ID"] = st.secrets["SPOTIPY_CLIENT_ID"]
 os.environ["SPOTIPY_CLIENT_SECRET"] = st.secrets["SPOTIPY_CLIENT_SECRET"]
 os.environ["SPOTIPY_REDIRECT_URI"] = st.secrets["SPOTIPY_REDIRECT_URI"]
 scope = "user-library-read user-read-playback-state user-modify-playback-state"
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
-
 
 holistic = mp.solutions.holistic
 hands = mp.solutions.hands
@@ -449,25 +444,25 @@ class EmotionDetector:
 
 
 def main():
-    def get_img_as_base64(file):
-        with open(file, "rb") as f:
-            data = f.read()
-        return base64.b64encode(data).decode()
-
-    img = get_img_as_base64("mario-la-pergola-uxV3wDMyccM-unsplash.jpg")
-    page_bg_img = f"""
-    <style>
-
-    [data-testid="stSidebar"] > div:first-child {{
-    background-image: url("data:image/png;base64,{img}");
-    background-position: center;
-    background-repeat: repeat;
-    background-attachment: fixed;
-    }}
-       </style>
-    """
-
-    st.markdown(page_bg_img, unsafe_allow_html=True)
+    # def get_img_as_base64(file):
+    #     with open(file, "rb") as f:
+    #         data = f.read()
+    #     return base64.b64encode(data).decode()
+    #
+    # img = get_img_as_base64("mario-la-pergola-uxV3wDMyccM-unsplash.jpg")
+    # page_bg_img = f"""
+    # <style>
+    #
+    # [data-testid="stSidebar"] > div:first-child {{
+    # background-image: url("data:image/png;base64,{img}");
+    # background-position: center;
+    # background-repeat: repeat;
+    # background-attachment: fixed;
+    # }}
+    #    </style>
+    # """
+    #
+    # st.markdown(page_bg_img, unsafe_allow_html=True)
 
     st.title("Real Time Emotion Based Music Player Application 🎵😄😠🤮😨😀😐😔😮")
     activiteis = ["Home", "About"]
@@ -559,11 +554,12 @@ st.markdown(
     """
     <style>
     body {
-        background-color: #f4f4f4;
+        background-color: white;
         font-family: Arial, sans-serif;
         margin: 0;
     }
     .stApp {
+        background-color: lightblue;
         max-width: 1200px;
         margin: 0 auto;
     }
@@ -573,7 +569,7 @@ st.markdown(
     }
     .st-block-container {
         padding: 20px;
-        background-color: #fff;
+        background-color: #009900
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
@@ -587,7 +583,7 @@ st.markdown(
     }
     .st-button {
         background-color: #FC4C02;
-        color: #fff;
+        color: #FF0	;
         font-weight: bold;
         border: none;
         border-radius: 5px;
