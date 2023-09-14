@@ -489,7 +489,12 @@ def main():
         st.write("3. Music will be played based on your mood.")
         st.write("4. Change the track by clicking the Next/Prev button.")
 
-        ctx = webrtc_streamer(key="emotion", video_processor_factory=EmotionDetector)
+        ctx = webrtc_streamer(
+            key="emotion",
+            video_processor_factory=EmotionDetector,
+            rtc_configuration={
+                "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
+            })
         time.sleep(8)
 
         col1, col2 = st.columns([0.5, 1])
