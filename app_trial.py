@@ -495,7 +495,7 @@ def main():
             rtc_configuration={
                 "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
             })
-        time.sleep(8)
+        # time.sleep(8)
 
         col1, col2 = st.columns([0.5, 1])
         with col1:
