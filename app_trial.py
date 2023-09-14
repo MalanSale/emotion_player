@@ -494,7 +494,9 @@ def main():
             video_processor_factory=EmotionDetector,
             rtc_configuration={
                 "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-            })
+            },
+            media_stream_constraints={"video": True, "audio": False},
+        )
         # time.sleep(8)
 
         col1, col2 = st.columns([0.5, 1])
