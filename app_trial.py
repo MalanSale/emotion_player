@@ -16,7 +16,6 @@ sp = spotipy.Spotify(
     auth_manager=SpotifyOAuth(
         client_id=st.secrets["SPOTIPY_CLIENT_ID"],
         client_secret=st.secrets["SPOTIPY_CLIENT_SECRET"],
-        redirect_uri=st.secrets["SPOTIPY_REDIRECT_URI"],
         scope=scope
     )
 )
