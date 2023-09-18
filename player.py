@@ -26,15 +26,16 @@ class EmotionMusicPlayer:
 
     def recommend_and_store_music(self, emotion, mood):
         self.recommended_songs = {}
-
+        print('in Music Player->',emotion)
         if mood == "Generic":
             selected_genre = random.choice(utils.genres.get(emotion.lower()))
         else:
             selected_genre = random.choice(
                 utils.instrumental_genres.get(emotion.lower())
             )
-
+        print('selected_genre',selected_genre)
         track_uris = self.search_song_by_genre(selected_genre)
+        print('track_uris',track_uris)
         if not track_uris:
             st.warning(f"No songs found for the {selected_genre} genre.")
             return None
@@ -80,6 +81,8 @@ class EmotionMusicPlayer:
 
     def search_song_by_genre(self, genre):
         query = f" genre:{genre}" if genre else "year:2010-2023"
+        req=self.sp.search(query, limit=self.limit, type="track")
+        print(req)
         return self.sp.search(query, limit=self.limit, type="track")
 
     def play_song(self, track_uri, track_uris):
