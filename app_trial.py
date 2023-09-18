@@ -7,6 +7,7 @@ import streamlit as st
 from deepface import DeepFace
 from face_recognition.api import face_locations
 from spotipy.oauth2 import SpotifyOAuth
+from streamlit_option_menu import option_menu
 from streamlit_webrtc import webrtc_streamer, VideoProcessorBase
 
 from player import EmotionMusicPlayer
@@ -20,6 +21,7 @@ sp = spotipy.Spotify(
         scope=scope
     )
 )
+company_name = "ChillTrill"
 
 
 class EmotionDetector(VideoProcessorBase):
@@ -63,12 +65,20 @@ class EmotionDetector(VideoProcessorBase):
 
 
 def main():
-    st.title("Real Time Emotion Based Music Player Application")
-    activities = ["Home", "About"]
-    choice = st.sidebar.selectbox("Select Activity", activities)
-    generic_mood = st.sidebar.selectbox("Select song type:", ["Generic", "Focused"])
-    if choice == "Home":
-        html_temp_home1 = """<div style="background-color:#FC4C02;padding:0.5px">     
+    with st.sidebar:
+        menu = option_menu(
+            None,
+            ['Home', 'About'],
+            icons=['house', 'info'],
+            menu_icon="cast",
+            default_index=0
+        )
+    generic_mood = st.sidebar.radio(
+        'Select song type',
+        options=['Generic', 'Focused']
+    )
+    if menu == "Home":
+        html_temp_home1 = """<div style="border:groove;padding:0.5px">     
                             <h4 style="color:white;text-align:center;">
                             Start Your Real Time Face Emotion Detection.
                              </h4>
@@ -110,9 +120,9 @@ def main():
                 detected_emotion = ctx.video_processor.detected_emotion
 
                 if detected_emotion and generic_mood:
-                    recommended_song_uris = music_player.recommend_and_store_music(
-                        detected_emotion, generic_mood
-                    )
+                    # recommended_song_uris = music_player.recommend_and_store_music(
+                    #     detected_emotion, generic_mood
+                    # )
                     selected_track_uri, track_uris = music_player.recommend_music(
                         detected_emotion, generic_mood
                     )
@@ -144,28 +154,69 @@ def main():
                 music_player.play_previous_song()
 
             time.sleep(0.1)
+    elif menu == "About":
+        st.markdown(
+            f"""
+                <section>
+                    <h2>Welcome to {company_name}</h2>
+                    <p>
+                        Welcome to {company_name}, where music meets emotions in a harmonious blend of technology and artistry. Our mission is to transform the way you experience music by creating a dynamic, deeply personal, and emotionally resonant listening experience.
+                    </p>
+                </section>
+                <section>
+                    <h2>Our Story</h2>
+                    <p>
+                        At {company_name}, we believe that music is more than just sound. It's a powerful medium that has the ability to touch our souls, evoke memories, and connect us to our deepest emotions. With this belief, we embarked on a journey to create an app that would revolutionize the way people interact with their music.
+                    </p>
+                    <p>
+                        Our team of music enthusiasts, engineers, and designers came together with a shared passion for leveraging cutting-edge technology to enhance the emotional impact of music. We wanted to create an app that not only plays your favorite songs but also understands and responds to your feelings.
+                    </p>
+                </section>
+                <section>
+                    <h2>How It Works</h2>
+                    <p>
+                        Our emotion-based music player is built on a sophisticated algorithm that analyzes your emotional state in real-time. By using a combination of audio analysis, user input, and machine learning, we can accurately identify your current mood and tailor the music to match it.
+                    </p>
+                    <p>
+                        Whether you're feeling upbeat and energetic or introspective and relaxed, [Your App Name] has a playlist ready to accompany your emotional journey. You can also customize your music experience by adjusting the settings to fine-tune the emotional resonance of your playlist.
+                    </p>
+                </section>
+                <section>
+                    <h2>Why Choose Us</h2>
+                    <ul>
+                        <li><strong>Emotion-Driven Playlists:</strong> Experience music that syncs with your feelings, making every listening session a unique and immersive experience.</li>
+                        <li><strong>Personalized Recommendations:</strong> Our app learns your music preferences and emotional triggers, offering you songs and playlists that resonate with you on a deeper level.</li>
+                        <li><strong>User-Centric Design:</strong> We've designed our app with simplicity and user-friendliness in mind, ensuring that everyone, from music aficionados to casual listeners, can enjoy a seamless experience.</li>
+                        <li><strong>Privacy and Security:</strong> Your emotional data and personal information are treated with the utmost care. We prioritize your privacy and adhere to strict security protocols.</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>Join Us on This Journey</h2>
+                    <p>
+                        At {company_name}, we're committed to continuously improving and innovating our app to provide you with the best possible music experience. Join us on this exciting journey as we explore the uncharted territory of emotion-driven music.
+                    </p>
+                    <p>
+                        Thank you for choosing {company_name} as your music companion. Together, we'll discover the incredible emotional power of music and make every note count.
+                    </p>
+                </section>
+            """, unsafe_allow_html=True
+        )
 
 
 # Streamlit Customisation
 st.set_page_config(
-    page_title="Emotion Music Player",
+    page_title=company_name,
     page_icon="🎵",
-    layout="wide",
-    initial_sidebar_state="expanded",
 )
-st.sidebar.title("Settings")
 
 st.markdown(
     """
     <style>
-    body {
-        background-color: white;
-        font-family: Arial, sans-serif;
-        margin: 0;
-    }
     .stApp {
-        background-color: lightblue;
-        max-width: 1200px;
+        # background-color: #7499a5;
+        background-image: url("https://img.freepik.com/free-vector/colorful-wavy-background_23-2148493464.jpg?w=1380&t=st=1694782898~exp=1694783498~hmac=6963454ad3bc1cc83bce18207935db00253822159fada3cdd450661b589a40a8");
+        background-size: cover;
+        # max-width: 1200px;
         margin: 0 auto;
     }
     .st-sidebar .sidebar-content {
@@ -196,9 +247,6 @@ st.markdown(
     }
     .st-button:hover {
         background-color: #FF5733;
-    }
-    .st-slider {
-        width: 100%;
     }
     </style>
     """,
