@@ -113,11 +113,12 @@ def main():
         while True:
             if getattr(ctx, "video_processor", None):
                 detected_emotion = ctx.video_processor.detected_emotion
-
+                print('Detected emotion',detected_emotion)
                 if detected_emotion and generic_mood:
                     recommended_song_uris = music_player.recommend_and_store_music(
                         detected_emotion, generic_mood
                     )
+                    print('------->',recommended_song_uris)
                     selected_track_uri, track_uris = music_player.recommend_music(
                         detected_emotion, generic_mood
                     )
