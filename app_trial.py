@@ -110,6 +110,7 @@ def main():
             prev_btn = st.button("Previous")
         time.sleep(8)
         music_player = EmotionMusicPlayer(sp=sp)
+        print(music_player)
         while True:
             if getattr(ctx, "video_processor", None):
                 detected_emotion = ctx.video_processor.detected_emotion
