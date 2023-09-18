@@ -26,7 +26,7 @@ class EmotionMusicPlayer:
 
     def recommend_and_store_music(self, emotion, mood):
         self.recommended_songs = {}
-
+        print('in Music Player->',emotion)
         if mood == "Generic":
             selected_genre = random.choice(utils.genres.get(emotion.lower()))
         else:
