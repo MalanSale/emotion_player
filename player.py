@@ -33,8 +33,9 @@ class EmotionMusicPlayer:
             selected_genre = random.choice(
                 utils.instrumental_genres.get(emotion.lower())
             )
-
+        print('selected_genre',selected_genre)
         track_uris = self.search_song_by_genre(selected_genre)
+        print('track_uris',track_uris)
         if not track_uris:
             st.warning(f"No songs found for the {selected_genre} genre.")
             return None
