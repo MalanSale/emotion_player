@@ -81,6 +81,8 @@ class EmotionMusicPlayer:
 
     def search_song_by_genre(self, genre):
         query = f" genre:{genre}" if genre else "year:2010-2023"
+        req=self.sp.search(query, limit=self.limit, type="track")
+        print(req)
         return self.sp.search(query, limit=self.limit, type="track")
 
     def play_song(self, track_uri, track_uris):
