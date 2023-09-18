@@ -19,7 +19,7 @@ sp = spotipy.Spotify(
         client_id=st.secrets["SPOTIPY_CLIENT_ID"],
         client_secret=st.secrets["SPOTIPY_CLIENT_SECRET"],
         redirect_uri=st.secrets["SPOTIPY_REDIRECT_URI"],
-        scope=scope
+        scope=scope,
     )
 )
 company_name = "ChillTrill"
@@ -39,9 +39,7 @@ class EmotionDetector(VideoProcessorBase):
 
             try:
                 result = DeepFace.analyze(
-                    face_roi,
-                    actions=("emotion",),
-                    enforce_detection=False
+                    face_roi, actions=("emotion",), enforce_detection=False
                 )
                 emotion_predictions = result[0]["emotion"]
                 predicted_emotion = max(
@@ -69,15 +67,12 @@ def main():
     with st.sidebar:
         menu = option_menu(
             None,
-            ['Home', 'About'],
-            icons=['house', 'info'],
+            ["Home", "About"],
+            icons=["house", "info"],
             menu_icon="cast",
-            default_index=0
+            default_index=0,
         )
-    generic_mood = st.sidebar.radio(
-        'Select song type',
-        options=['Generic', 'Focused']
-    )
+    generic_mood = st.sidebar.radio("Select song type", options=["Generic", "Focused"])
     if menu == "Home":
         html_temp_home1 = """<div style="border:groove;padding:0.5px">     
                             <h4 style="color:white;text-align:center;">
@@ -107,23 +102,22 @@ def main():
             },
             media_stream_constraints={"video": True, "audio": False},
         )
-        # time.sleep(8)
 
         col1, col2 = st.columns([0.5, 1])
         with col1:
             next_btn = st.button("Next")
         with col2:
             prev_btn = st.button("Previous")
-
+        time.sleep(8)
         music_player = EmotionMusicPlayer(sp=sp)
         while True:
             if getattr(ctx, "video_processor", None):
                 detected_emotion = ctx.video_processor.detected_emotion
 
                 if detected_emotion and generic_mood:
-                    # recommended_song_uris = music_player.recommend_and_store_music(
-                    #     detected_emotion, generic_mood
-                    # )
+                    recommended_song_uris = music_player.recommend_and_store_music(
+                        detected_emotion, generic_mood
+                    )
                     selected_track_uri, track_uris = music_player.recommend_music(
                         detected_emotion, generic_mood
                     )
@@ -200,7 +194,8 @@ def main():
                         Thank you for choosing {company_name} as your music companion. Together, we'll discover the incredible emotional power of music and make every note count.
                     </p>
                 </section>
-            """, unsafe_allow_html=True
+            """,
+            unsafe_allow_html=True,
         )
 
 

@@ -83,26 +83,28 @@ class EmotionMusicPlayer:
         return self.sp.search(query, limit=self.limit, type="track")
 
     def play_song(self, track_uri, track_uris):
-        player_url = f"https://open.spotify.com/embed/track/{track_uri.split(':')[2]}"
-        track_info = self.sp.track(track_uri)
-        duration = track_info["duration_ms"]
-        uri = track_info["uri"]
-        preview_url = track_info["preview_url"]
-
-        if preview_url and player_url:
-            return (
-                "",
-                track_info["name"],
-                ", ".join(artist["name"] for artist in track_info["artists"]),
-                preview_url,
-                player_url,
-                duration,
+        for attempt in range(1, 6):  # Retry up to 5 times
+            player_url = (
+                f"https://open.spotify.com/embed/track/{track_uri.split(':')[2]}"
             )
+            track_info = self.sp.track(track_uri)
+            duration = track_info["duration_ms"]
+            uri = track_info["uri"]
+            preview_url = track_info["preview_url"]
 
-        else:
-            print("Song preview not available.")
+            if preview_url and player_url:
+                return (
+                    "",
+                    track_info["name"],
+                    ", ".join(artist["name"] for artist in track_info["artists"]),
+                    preview_url,
+                    player_url,
+                    duration,
+                )
 
-            return b"", "", "", "", "", ""
+        # If all attempts fail, print the message and return empty values
+        print("Song preview not available after 5 attempts.")
+        return b"", "", "", "", "", ""
 
     def autoplay_audio(
         self, data, track_name, artists, preview_url, player_url, duration
