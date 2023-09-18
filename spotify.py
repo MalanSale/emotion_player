@@ -5,7 +5,7 @@ import webbrowser
 username = 'malan'
 clientID = '464e21e55aee4ea4af261b6cbb3261ee'
 clientSecret = 'df407503d4cd46868c8018a7e401605d'
-redirect_uri = 'http://google.com/callback/'
+redirect_uri = 'https://google.com/callback/'
 oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri)
 token_dict = oauth_object.get_access_token()
 token = token_dict['access_token']
