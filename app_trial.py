@@ -1,3 +1,4 @@
+import base64
 import time
 
 import av
@@ -208,17 +209,20 @@ st.set_page_config(
     page_title=company_name,
     page_icon="🎵",
 )
-
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background: url(data:image/jpg;base64,{base64.b64encode(open("assets/images/cover.jpg", "rb").read()).decode()});
+        background-size: cover;
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 st.markdown(
     """
     <style>
-    .stApp {
-        # background-color: #7499a5;
-        background-image: url("https://img.freepik.com/free-vector/colorful-wavy-background_23-2148493464.jpg?w=1380&t=st=1694782898~exp=1694783498~hmac=6963454ad3bc1cc83bce18207935db00253822159fada3cdd450661b589a40a8");
-        background-size: cover;
-        # max-width: 1200px;
-        margin: 0 auto;
-    }
     .st-sidebar .sidebar-content {
         background-color: #333;
         color: #fff;
