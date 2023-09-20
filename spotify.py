@@ -5,7 +5,7 @@ import webbrowser
 username = 'malan'
 clientID = '2ae751452b6a4bb385f129aa2849e30a'
 clientSecret = 'fcae1bab1b7d4cf7b3b537ca19ffcd6d'
-redirect_uri = 'https://google.com/callback/'
+redirect_uri = 'https://github.com/MalanSale/emotion_player/blob/chilltrill_new/spotify.py'
 oauth_object = spotipy.SpotifyOAuth(clientID, clientSecret, redirect_uri)
 token_dict = oauth_object.get_access_token()
 token = token_dict['access_token']
