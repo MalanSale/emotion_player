@@ -10,7 +10,7 @@ import streamlit as st
 from deepface import DeepFace
 from face_recognition.api import face_locations
 from spotipy.oauth2 import SpotifyOAuth
-from streamlit_webrtc import webrtc_streamer, VideoProcessorBase
+from streamlit_webrtc import webrtc_streamer,VideoProcessorBase
 
 os.environ["SPOTIPY_CLIENT_ID"] = st.secrets["SPOTIPY_CLIENT_ID"]
 os.environ["SPOTIPY_CLIENT_SECRET"] = st.secrets["SPOTIPY_CLIENT_SECRET"]
