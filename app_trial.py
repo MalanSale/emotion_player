@@ -10,7 +10,7 @@ import streamlit as st
 from deepface import DeepFace
 from face_recognition.api import face_locations
 from spotipy.oauth2 import SpotifyOAuth
-from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer,VideoProcessorBase
 
 os.environ["SPOTIPY_CLIENT_ID"] = st.secrets["SPOTIPY_CLIENT_ID"]
 os.environ["SPOTIPY_CLIENT_SECRET"] = st.secrets["SPOTIPY_CLIENT_SECRET"]
@@ -401,7 +401,7 @@ class EmotionMusicPlayer:
         self.current_playing_index = 0
 
 
-class EmotionDetector:
+class EmotionDetector(VideoProcessorBase):
     detected_emotion = ""
 
     def recv(self, frame):
@@ -409,14 +409,13 @@ class EmotionDetector:
         img = frame.to_ndarray(format="bgr24")
         rgb_frame = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         face_locations_list = face_locations(rgb_frame)
-        res = hol.process(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         predicted_emotion = ""
         for top, right, bottom, left in face_locations_list:
             face_roi = img[top:bottom, left:right]
 
             try:
                 result = DeepFace.analyze(
-                    face_roi, actions=["emotion"], enforce_detection=False
+                    face_roi, actions=("emotion",), enforce_detection=False
                 )
                 emotion_predictions = result[0]["emotion"]
                 predicted_emotion = max(
@@ -437,10 +436,8 @@ class EmotionDetector:
             )
             cv2.rectangle(img, (left, top), (right, bottom), (0, 255, 0), 2)
         self.detected_emotion = predicted_emotion
-        drawing.draw_landmarks(img, res.face_landmarks, holistic.FACEMESH_TESSELATION)
-        drawing.draw_landmarks(img, res.left_hand_landmarks, hands.HAND_CONNECTIONS)
-        drawing.draw_landmarks(img, res.right_hand_landmarks, hands.HAND_CONNECTIONS)
         return av.VideoFrame.from_ndarray(img, format="bgr24")
+
 
 
 def main():
@@ -489,15 +486,8 @@ def main():
         st.write("3. Music will be played based on your mood.")
         st.write("4. Change the track by clicking the Next/Prev button.")
 
-        ctx = webrtc_streamer(
-            key="emotion",
-            video_processor_factory=EmotionDetector,
-            rtc_configuration={
-                "iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]
-            },
-            media_stream_constraints={"video": True, "audio": False},
-        )
-        # time.sleep(8)
+        ctx = webrtc_streamer(key="emotion", video_processor_factory=EmotionDetector)
+        time.sleep(8)
 
         col1, col2 = st.columns([0.5, 1])
         with col1:
