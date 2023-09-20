@@ -94,6 +94,8 @@ class EmotionDetector(VideoProcessorBase):
 
 
 def main():
+    SPR_SPOTIFY_URL = 'https://cdn-icons-png.flaticon.com/512/2111/2111624.png'
+    st.sidebar.image(SPR_SPOTIFY_URL,use_column_width=False, width=200, )
     with st.sidebar:
         menu = option_menu(
             None,
