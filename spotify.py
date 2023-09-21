@@ -15,10 +15,6 @@ import os
 os.environ["SPOTIPY_CLIENT_ID"] = st.secrets["SPOTIPY_CLIENT_ID"]
 os.environ["SPOTIPY_CLIENT_SECRET"] = st.secrets["SPOTIPY_CLIENT_SECRET"]
 os.environ["SPOTIPY_REDIRECT_URI"] = st.secrets["SPOTIPY_REDIRECT_URI"]
-SPOTIPY_CLIENT_ID = "2ae751452b6a4bb385f129aa2849e30a"
-SPOTIPY_CLIENT_SECRET = "fcae1bab1b7d4cf7b3b537ca19ffcd6d"
-os.environ["SPOTIPY_CLIENT_ID"] = SPOTIPY_CLIENT_ID
-os.environ["SPOTIPY_CLIENT_SECRET"] = SPOTIPY_CLIENT_SECRET
 
 # Use the Spotify API client credentials flow (no user authentication required)
 sp = spotipy.Spotify(auth_manager=spotipy.oauth2.SpotifyClientCredentials())
@@ -27,17 +23,7 @@ query = "genre:pop"
 track_uris = sp.search(query, limit=1, type="track")
 print(track_uris)
 
-# scope = "user-library-read user-read-playback-state user-modify-playback-state"
-# sp = spotipy.Spotify(
-#     auth_manager=SpotifyOAuth(
-#         client_id=st.secrets["SPOTIPY_CLIENT_ID"],
-#         client_secret=st.secrets["SPOTIPY_CLIENT_SECRET"],
-#         redirect_uri=st.secrets["SPOTIPY_REDIRECT_URI"],
-#         scope=scope,
-#     )
-# )
 company_name = "ChillTrill"
-
 
 class EmotionDetector(VideoProcessorBase):
     detected_emotion = ""
@@ -135,7 +121,7 @@ def main():
                     recommended_song_uris = music_player.recommend_and_store_music(
                         detected_emotion, generic_mood
                     )
-                    print('------->',recommended_song_uris)
+                    print(recommended_song_uris)
                     selected_track_uri, track_uris = music_player.recommend_music(
                         detected_emotion, generic_mood
                     )
